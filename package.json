@@ -1,0 +1,25 @@
+{
+  "name": "audit-api-ts",
+  "version": "1.0.0",
+  "description": "Express, NodeJS & TypeScript API for audit sign-in dashboard",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "dev": "nodemon src/index.ts",
+    "start": "node builds/index.js"
+  },
+  "author": "B Cartwright",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "@types/mysql": "^2.15.6",
+    "@types/node": "^12.0.2",
+    "express": "^4.17.0",
+    "moment": "^2.24.0",
+    "mysql": "^2.17.1",
+    "nodemon": "^1.19.0",
+    "path": "^0.12.7",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  }
+}
