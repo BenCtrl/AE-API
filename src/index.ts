@@ -89,7 +89,7 @@ class DB {
         this.db = mysql.createConnection({
             host: 'localhost',
             user: 'cartwrightb',
-            password: 'dbadmin',
+            password: '',
             database: 'audit_dashboard' 
         });
         this.connectToDB();
