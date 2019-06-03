@@ -36,7 +36,7 @@ class Server {
             respond.send('API running...');                                                     //the "respond" object followed by a "send" function.
         });
 
-        this.app.post('/api/visitor/signin', (req, res) => {                                    //This is activated whenever a user makes a POST request to the URL 'localhost:3200/api/visitors'
+        this.app.post('/api/visitor/signin', (req: Request, res: Response) => {                                    //This is activated whenever a user makes a POST request to the URL 'localhost:3200/api/visitors'
             const visitor = {
                 name : req.body.name,
                 comp: req.body.company,
@@ -48,14 +48,14 @@ class Server {
             this.sqlDB.addVisitor(visitor);
         });
 
-        this.app.post('/api/visitor/signout', (req, res) => {                                    //req is what is passed into the function, res is the response of this app on this server.
+        this.app.post('/api/visitor/signout', (req: Request, res: Response) => {                                    //req is what is passed into the function, res is the response of this app on this server.
             const name = req.body.name;
             console.log(req.body);
             res.send(`[${this.date}] Visitor ${req.body.name} Signed out!`);
             this.sqlDB.signoutVisitor(name);
         });
 
-        this.app.get('/api/visitor/list', (req, res) => {                                       //req is what is passed into the function, res is the response of this app on this server.
+        this.app.get('/api/visitor/list', (req: Request, res: Response) => {                                       //req is what is passed into the function, res is the response of this app on this server.
             const sqlQuery = `SELECT * FROM visitor_signin WHERE sign_out_date IS null`;
             this.sqlDB.db.query(sqlQuery, (error, result) => {                                  //Will actually query the DB and returns either a response or an error.
                 if(error) throw error; 
@@ -82,8 +82,10 @@ interface Visitor{                                                              
 class DB { 
 
     db: Connection;
+    date: string;
 
     constructor() {
+        this.date = '';
         this.db = mysql.createConnection({
             host: 'localhost',
             user: 'cartwrightb',
@@ -91,6 +93,9 @@ class DB {
             database: 'audit_dashboard' 
         });
         this.connectToDB();
+        setInterval(() => {
+            this.date = moment().format('DD/MM/YYYY hh:mm:ss');
+        }, 1000);
     }
 
     main() {
@@ -105,10 +110,9 @@ class DB {
         let sqlQuery = `INSERT INTO visitor_signin(v_name, v_company, v_person, v_reason) VALUES (?, ?, ?, ?);`;
         const inserts = [visitor.name, visitor.comp, visitor.pers, visitor.reas];
         sqlQuery = mysql.format(sqlQuery, inserts);
-        console.log(sqlQuery);
         this.db.query(sqlQuery, (error, result) => {                              //Will actually query the DB and returns either a response or an error.
             if(error) throw error;
-            console.log(`Row Inserted!`);
+            console.log(`[${this.date}] Visitor Signed In, Row Inserted!`);
         });
     }
     
@@ -118,7 +122,7 @@ class DB {
         sqlQuery = mysql.format(sqlQuery, inserts);
         this.db.query(sqlQuery, (error, result) => {
             if(error) throw error;
-            console.log('Visitor Signed Out');
+            console.log(`[${this.date}] Visitor Signed Out`);
         });
     }
 }
